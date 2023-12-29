@@ -38,7 +38,13 @@ def dump_bird(lst, f):
             dump_bird(n.child, f)
 
         elif not n.dead:
-            f.write('route %s via "%s";\n' % (n.cidr, args.next))
+            next_hop = args.next
+            # 判断--next参数是否包含英文字母（即端口名称)，如果包含则加双引号，如果否则为CIDR格式地址，不加双引号
+            if any(char.isalpha() for char in next_hop):
+                next_hop = '"%s"' % next_hop
+
+            f.write('route %s via %s;\n' % (n.cidr, next_hop))
+
 
 RESERVED = [
     IPv4Network('0.0.0.0/8'),
