@@ -11,6 +11,7 @@ config.read('config.ini')
 
 # 获取domaintxt_path的值，默认使用DEFAULT部分
 domaintxt_path = config.get('DEFAULT', 'domaintxt_path', fallback='')
+route_gateway = config.get('DEFAULT', 'route_gateway', fallback='')
 if domaintxt_path:
     # 读取文件并处理内容
     domains_list = []
@@ -45,5 +46,7 @@ for domain_to_lookup in domains_list:
     all_ip_addresses.extend(ip_addresses)
 
 exclude_param = " ".join(f"{ip}/32" for ip in all_ip_addresses)
+exclude_list = exclude_param.split()
 
-subprocess.run(["python3", "produce.py", "--exclude", exclude_param])
+
+subprocess.run(["python3", "produce.py", "--exclude"] + exclude_list + ["--next", route_gateway])
