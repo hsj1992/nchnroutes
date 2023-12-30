@@ -10,12 +10,13 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # 获取domaintxt_path的值，默认使用DEFAULT部分
-domaintxt_path = config.get('DEFAULT', 'domaintxt_path', fallback='')
+exclude_domaintxt_path = config.get('DEFAULT', 'exclude_domaintxt_path', fallback='')
 route_gateway = config.get('DEFAULT', 'route_gateway', fallback='')
-if domaintxt_path:
+exclude_IPs = config.get('DEFAULT', 'exclude_IPs', fallback='')
+if exclude_domaintxt_path:
     # 读取文件并处理内容
     domains_list = []
-    with open(domaintxt_path, 'r') as file:
+    with open(exclude_domaintxt_path, 'r') as file:
         for line in file:
             # 去除每行开头的'domain:'字段并去除两端的空白字符
             domain = line.strip().replace('domain:', '')
@@ -33,6 +34,11 @@ def get_ip_addresses(domain):
 
 # 示例用法
 all_ip_addresses = []
+# 从配置文件读取 exclude_ip
+exclude_ip_list = config['General']['exclude_ip'].split(',')
+
+# 将 exclude_ip 中的 CIDR 地址添加到 all_ip_addresses
+all_ip_addresses.extend(exclude_ip_list)
 
 for domain_to_lookup in domains_list:
     # Skip domains that are not valid or cannot be resolved
@@ -47,6 +53,7 @@ for domain_to_lookup in domains_list:
 
 exclude_param = " ".join(f"{ip}/32" for ip in all_ip_addresses)
 exclude_list = exclude_param.split()
+print(exclude_list)
 
 
 subprocess.run(["python3", "produce.py", "--exclude"] + exclude_list + ["--next", route_gateway])
