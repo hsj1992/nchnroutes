@@ -35,7 +35,7 @@ def get_ip_addresses(domain):
 # 示例用法
 all_ip_addresses = []
 # 从配置文件读取 exclude_ip
-exclude_ip_list = config['General']['exclude_ip'].split(',')
+exclude_ip_list = config['DEFAULT']['exclude_IPs'].split(',')
 
 # 将 exclude_ip 中的 CIDR 地址添加到 all_ip_addresses
 all_ip_addresses.extend(exclude_ip_list)
