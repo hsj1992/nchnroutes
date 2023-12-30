@@ -34,12 +34,6 @@ def get_ip_addresses(domain):
 
 # 示例用法
 all_ip_addresses = []
-# 从配置文件读取 exclude_ip
-exclude_ip_list = config['DEFAULT']['exclude_IPs'].split(',')
-
-# 将 exclude_ip 中的 CIDR 地址添加到 all_ip_addresses
-all_ip_addresses.extend(exclude_ip_list)
-
 for domain_to_lookup in domains_list:
     # Skip domains that are not valid or cannot be resolved
     if not domain_to_lookup or '.' not in domain_to_lookup:
@@ -53,6 +47,11 @@ for domain_to_lookup in domains_list:
 
 exclude_param = " ".join(f"{ip}/32" for ip in all_ip_addresses)
 exclude_list = exclude_param.split()
+
+# 从配置文件读取 exclude_ip
+exclude_ip_list = config['DEFAULT']['exclude_IPs'].split(',')
+# 将 exclude_ip 中的 CIDR 地址添加到 all_ip_addresses
+all_ip_addresses.extend(exclude_ip_list)
 print(exclude_list)
 
 
