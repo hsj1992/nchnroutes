@@ -17,10 +17,17 @@ if domaintxt_path:
     domains_list = []
     with open(domaintxt_path, 'r') as file:
         for line in file:
-            # 去除每行开头的'domain:'字段并去除两端的空白字符
-            domain = line.strip().replace('domain:', '')
-            # 将提取出的域名添加到列表中
-            domains_list.append(domain)
+            # 使用冒号分割字符串，然后去除两端的空白字符
+            domain = line.split(':', 1)[-1].strip()
+
+            # 检查域名是否有效
+            try:
+                socket.gethostbyname(domain)
+                # 如果域名有效，将其添加到列表中
+                domains_list.append(domain)
+            except socket.error:
+                # 如果域名无效，可以进行相应的处理或忽略
+                print(f"Invalid domain: {domain}")
 
 def get_ip_addresses(domain):
     try:
