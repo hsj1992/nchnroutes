@@ -4,7 +4,6 @@
 import configparser
 import socket
 import subprocess
-import idna
 
 # 创建一个ConfigParser对象并读取配置文件
 config = configparser.ConfigParser()
@@ -16,23 +15,19 @@ route_gateway = config.get('DEFAULT', 'route_gateway', fallback='')
 if domaintxt_path:
     # 读取文件并处理内容
     domains_list = []
-with open(domaintxt_path, 'r') as file:
-    for line in file:
-        # 使用冒号分割字符串，然后去除两端的空白字符
-        domain = line.split(':', 1)[-1].strip()
+    with open(domaintxt_path, 'r') as file:
+        for line in file:
+            # 使用冒号分割字符串，然后去除两端的空白字符
+            domain = line.split(':', 1)[-1].strip()
 
-        try:
-            # 使用 idna 模块对域名进行编码
-            encoded_domain = idna.encode(domain).decode('utf-8')
-            
-            # 检查编码后的域名是否有效
-            socket.gethostbyname(encoded_domain)
-            
-            # 如果域名有效，将其添加到列表中
-            domains_list.append(encoded_domain)
-        except (idna.IDNAError, socket.error) as e:
-            # 如果域名无效，可以进行相应的处理或忽略
-            print(f"Invalid domain: {domain}, Error: {e}")
+            # 检查域名是否有效
+            try:
+                socket.gethostbyname(domain)
+                # 如果域名有效，将其添加到列表中
+                domains_list.append(domain)
+            except socket.error:
+                # 如果域名无效，可以进行相应的处理或忽略
+                print(f"Invalid domain: {domain}")
 
 def get_ip_addresses(domain):
     try:
