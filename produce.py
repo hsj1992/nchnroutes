@@ -69,11 +69,12 @@ RESERVED = [
 RESERVED_V6 = []
 if args.exclude:
     for e in args.exclude:
-        if ":" in e:
-            RESERVED_V6.append(IPv6Network(e))
-
-        else:
-            RESERVED.append(IPv4Network(e))
+        ips = e.split()
+        for ip in ips:
+            if ":" in ip:
+                RESERVED_V6.append(IPv6Network(ip))
+            else:
+                RESERVED.append(IPv4Network(ip))
 
 IPV6_UNICAST = IPv6Network('2000::/3')
 
