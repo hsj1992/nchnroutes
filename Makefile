@@ -1,9 +1,17 @@
-produce:
-	git pull
-	curl -o delegated-apnic-latest https://ftp.apnic.net/stats/apnic/delegated-apnic-latest
-	curl -o china_ip_list.txt https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt
-	python3 fordomain.py
-	mv routes4.conf /etc/bird/routes4.conf
-	# sudo mv routes6.conf /etc/bird/routes6.conf
-	birdc configure
-	# sudo birdc6 configure
+# Makefile
+
+.PHONY: all
+
+all: check
+
+# Download the latest SHA256 files
+delegated-apnic-latest.sha256:
+	curl -o delegated-apnic-latest.sha256 https://raw.githubusercontent.com/hsj1992/nchnroutes/main/delegated-apnic-latest.sha256
+
+china_ip_list.txt.sha256:
+	curl -o china_ip_list.txt.sha256 https://raw.githubusercontent.com/hsj1992/nchnroutes/main/china_ip_list.txt.sha256
+
+# Check if local files match the downloaded SHA256 files
+check: delegated-apnic-latest.sha256 china_ip_list.txt.sha256
+	@sha256sum -c $^ || (echo "Files do not match. Continue Running ..." && curl -o delegated-apnic-latest https://raw.githubusercontent.com/hsj1992/nchnroutes/main/delegated-apnic-latest && curl -o china_ip_list.txt https://raw.githubusercontent.com/hsj1992/nchnroutes/main/china_ip_list.txt && python3 fordomain.py && mv routes4.conf /etc/bird/routes4.conf && birdc configure)
+
