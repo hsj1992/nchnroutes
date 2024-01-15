@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2.5.1
+      uses: actions/checkout@v4
 
     - name: Download and Update Files
       run: |
