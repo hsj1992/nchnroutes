@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2.5.1
 
     - name: Download and Update Files
       run: |
@@ -22,10 +22,10 @@ jobs:
         sha256sum delegated-apnic-latest > delegated-apnic-latest.sha256
         sha256sum china_ip_list.txt > china_ip_list.txt.sha256
 
-    - name: Commit and Push Changes
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@users.noreply.github.com"
-        git add delegated-apnic-latest china_ip_list.txt *.sha256
-        git commit -m "Update files $(date +"%Y-%m-%d")"
-        git push
+- name: Commit and Push Changes
+  run: |
+    git config user.name "GitHub Actions"
+    git config user.email "actions@users.noreply.github.com"
+    git add -f delegated-apnic-latest china_ip_list.txt *.sha256
+    git commit -m "Update files $(date +"%Y-%m-%d")"
+    git push
