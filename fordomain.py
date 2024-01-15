@@ -42,7 +42,7 @@ def process_url(url):
         return None
 
 # 示例用法
-force_cn_list_url = 'http://192.168.31.4:7889/force_cn_list.txt'
+force_cn_list_url = 'http://192.168.31.4:7889/force_nocn_list.txt'
 ip_array_force_cn = process_url(force_cn_list_url)
 # 替换最后一位为0并添加子网掩码长度
 modified_ips = [f"{ip.rsplit('.', 1)[0]}.0/24" for sublist in ip_array_force_cn for ip in sublist if ip != '0.0.0.1']
