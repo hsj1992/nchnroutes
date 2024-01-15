@@ -26,6 +26,6 @@ jobs:
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@users.noreply.github.com"
-        git add .
+        git add delegated-apnic-latest china_ip_list.txt *.sha256
         git commit -m "Update files $(date +"%Y-%m-%d")"
         git push
